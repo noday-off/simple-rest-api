@@ -1,11 +1,18 @@
 package com.trthinh.demo.student;
 
+import com.trthinh.demo.enrollment.Enrollment;
+
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.Period;
+import java.util.List;
 
 @Entity
-@Table
+@Table(name = "student",
+    uniqueConstraints = {
+        @UniqueConstraint(name = "unique_email_constraint", columnNames = "studentEmail")
+    }
+)
 public class Student {
     @Id
     @SequenceGenerator(
@@ -18,11 +25,25 @@ public class Student {
             generator = "student_sequence"
     )
     private Long id;
+    @Column(
+            name = "studentName",
+            nullable = false
+    )
     private String name;
+    @Column(
+            name = "studentEmail",
+            nullable = true
+    )
     private String email;
+    @Column(
+            name = "dateOfBirth",
+            nullable = false
+    )
     private LocalDate dob;
     @Transient
     private Integer age;
+    @OneToMany(mappedBy = "student")
+    List<Enrollment> enrollments;
 
     public Student() {
     }
